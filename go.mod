@@ -1,4 +1,4 @@
-module github.com/ceosss/go-envy.git
+module github.com/ceosss/go-envy
 
 go 1.23.3
 
