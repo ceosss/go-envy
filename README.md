@@ -16,7 +16,8 @@ Instead of juggling a single `.env` file and commenting/uncommenting variables, 
 - Load `.env.{env}` files dynamically (`.env.dev`, `.env.prod`, `.env.test`, etc.)
 - Simple API with just one function: `Load(env string)`
 - Uses [joho/godotenv](https://github.com/joho/godotenv) under the hood
-- Provides clear error messages if env files fail to load
+- Robust error handling with descriptive error messages
+- Input validation for environment names
 - Easily extendable for custom workflows
 
 ---
@@ -35,6 +36,7 @@ package main
 
 import (
     "fmt"
+    "log"
     "os"
 
     "github.com/ceosss/go-envy/envy"
@@ -42,8 +44,31 @@ import (
 
 func main() {
     // Load environment variables from .env.dev
-    envy.Load("dev")
+    if err := envy.Load("dev"); err != nil {
+        log.Fatalf("Failed to load environment: %v", err)
+    }
 
     // Access env vars as usual
     fmt.Println("Database Host:", os.Getenv("DB_HOST"))
+}
+```
+
+## Error Handling
+
+The `Load` function returns an error in the following cases:
+
+- Empty environment name
+- Environment name contains invalid characters
+- Environment file cannot be loaded or doesn't exist
+
+Example error handling:
+
+```go
+if err := envy.Load("dev"); err != nil {
+    switch {
+    case errors.Is(err, envy.ErrInvalidEnvName):
+        // Handle invalid environment name
+    default:
+        // Handle other errors
+    }
 }
