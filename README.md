@@ -25,3 +25,25 @@ Instead of juggling a single `.env` file and commenting/uncommenting variables, 
 
 ```bash
 go get github.com/ceosss/go-envy
+```
+---
+
+## Usage
+
+```go
+package main
+
+import (
+    "fmt"
+    "os"
+
+    "github.com/ceosss/go-envy/envy"
+)
+
+func main() {
+    // Load environment variables from .env.dev
+    envy.Load("dev")
+
+    // Access env vars as usual
+    fmt.Println("Database Host:", os.Getenv("DB_HOST"))
+}
